@@ -1,5 +1,5 @@
 #install
 
 ```sh
-npx tailwindcss -i ./assets/input.css -o ./src/output.css --watch
+npx tailwindcss -i ./assets/css/src.css -o ./assets/css/tailwind.css --watch
 ```
