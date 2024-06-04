@@ -11,12 +11,12 @@ function App() {
             <header className="min-h-[8vh] max-h-[10vh] flex flex-col items-end justify-center px-2 border-b">
                 <ModeToggle/>
             </header>
-            <main className="h-[80vh] flex flex-col items-center justify-center space-y-4">
-                <h1 className="text-4xl font-bold">Hello, I'm Wahidin!</h1>
-                <p>
-                    I'm a Software Engineer.
+            <main className="h-[80vh] flex flex-col items-center justify-center space-y-4 font-mono font-semibold ">
+                <h1 className="text-2xl md:text-4xl lg:text-6xl text-center text-slate-900 dark:text-slate-100 animate-pulse">Hello, I'm Wahidin!</h1>
+                <p className="text-xl md:text-lg">
+                    I'm a Software Engineer
                 </p>
-                <a href="https://github.com/WahidinAJi" className="text-xl font-bold" target="_blank">
+                <a href="https://github.com/WahidinAJi" className="text-xl md:text-lg" target="_blank">
                     <TooltipProvider>
                         <Tooltip>
                             <TooltipTrigger>
