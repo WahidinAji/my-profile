@@ -1,14 +1,14 @@
-import { createLazyFileRoute, Link } from '@tanstack/react-router'
-import { portfolio } from "@/data/portfolio.tsx";
-import bg from "@/assets/images/bg.png";
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardFooter,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card"
+import { createLazyFileRoute } from '@tanstack/react-router'
+// import { portfolio } from "@/data/portfolio.tsx";
+// import bg from "@/assets/images/bg.png";
+// import {
+//     Card,
+//     CardContent,
+//     CardDescription,
+//     CardFooter,
+//     CardHeader,
+//     CardTitle,
+// } from "@/components/ui/card"
 
 export const Route = createLazyFileRoute('/portfolio')({
     component: Portfolio,
