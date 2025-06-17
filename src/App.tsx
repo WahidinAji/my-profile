@@ -10,8 +10,8 @@ import {
     NavigationMenuList,
     // NavigationMenuTrigger,
     // NavigationMenuViewport,
-    navigationMenuTriggerStyle
 } from "@/components/ui/navigation-menu"
+import { navigationMenuTriggerStyle } from "@/components/ui/navigation-menu-styles"
 
 
 
