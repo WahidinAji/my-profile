@@ -1,5 +1,5 @@
-import {createLazyFileRoute, Link} from '@tanstack/react-router'
-import {portfolio} from "@/data/portfolio.tsx";
+import { createLazyFileRoute, Link } from '@tanstack/react-router'
+import { portfolio } from "@/data/portfolio.tsx";
 import bg from "@/assets/images/bg.png";
 import {
     Card,
@@ -21,34 +21,32 @@ function Portfolio() {
             <div className="max-w-screen-lg">
                 <h1 className="text-2xl md:text-4xl lg:text-6xl text-center text-slate-900 dark:text-slate-100 animate-pulse">Portfolio</h1>
                 <p className="text-xl md:text-lg px-4">
-                    Here are some of my projects that I have made to show my projects and skills.
+                    Here are some projects I've worked on to highlight my skills.
                 </p>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
+                {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
                     {portfolio.map((item, index) => (
                         <Card key={index} className="shadow-md rounded-md ">
                             <CardHeader className="pb-1">
-                                <img src={bg} alt={item.title} className="w-full h-48 object-cover rounded-md"/>
+                                <img src={bg} alt={item.title} className="w-full h-48 object-cover rounded-md" />
                                 <CardTitle>{item.title}</CardTitle>
                                 <CardDescription>{item.description}</CardDescription>
                             </CardHeader>
                             <CardContent className="mb-0 pb-1">
                                 <Link to={item.link} className="text-blue-500 dark:text-blue-300"
-                                      target="_blank">View</Link>
-                                {/*<p>Card Content</p>*/}
+                                    target="_blank">View</Link>
 
                             </CardContent>
                             <CardFooter className="grid grid-cols-2 gap-2 m-0 p-y-0">
-                                {/*<p>Card Footer</p>*/}
                                 {item.tags.map((tag, index) => (
                                     <span key={index}
-                                          className="bg-blue-500 dark:bg-blue-300 text-white dark:text-black px-2 py-1 rounded-md text-xs">{tag}</span>
+                                        className="bg-blue-500 dark:bg-blue-300 text-white dark:text-black px-2 py-1 rounded-md text-xs">{tag}</span>
                                 ))}
                             </CardFooter>
                         </Card>
                     ))}
 
-                </div>
+                </div> */}
 
                 {/*<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">*/}
                 {/*    {portfolio.map((item, index) => (*/}
