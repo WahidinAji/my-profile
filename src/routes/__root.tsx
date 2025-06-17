@@ -11,6 +11,7 @@ export const Route = createRootRouteWithContext<{
 })
 
 function RootComponent() {
+    const appDebug = import.meta.env.DEV && import.meta.env.VITE_APP_DEBUG === 'true';
     return (
         <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
             <header className="min-h-[8vh] max-h-[10vh] flex flex-row items-center justify-around px-2 border-b">
@@ -38,7 +39,7 @@ function RootComponent() {
                     &copy; 2024 WahidinAji
                 </span>
             </footer>
-            <TanStackRouterDevtools/>
+            {appDebug && <TanStackRouterDevtools/>}
         </ThemeProvider>
     );
 }

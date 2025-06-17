@@ -10,8 +10,6 @@ import {
     CardTitle,
 } from "@/components/ui/card"
 
-// import {  }
-
 export const Route = createLazyFileRoute('/portfolio')({
     component: Portfolio,
 })
@@ -72,23 +70,6 @@ function Portfolio() {
                 {/*</div>*/}
 
             </div>
-            {/*<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4 max-w-screen-md">*/}
-            {/*    {data.map((item, index) => (*/}
-            {/*    <div key={index} className="bg-white dark:bg-slate-900 shadow-md rounded-md p-4">*/}
-            {/*        <img src={item.image} alt={item.title} className="w-full h-48 object-cover rounded-md"/>*/}
-            {/*        <h3 className="text-xl font-semibold text-slate-900 dark:text-slate-100">{item.title}</h3>*/}
-            {/*        <p className="text-lg text-slate-700 dark:text-slate-300">{item.description}</p>*/}
-            {/*        <div className="flex justify-between items-center mt-2">*/}
-            {/*        <a href={item.link} className="text-blue-500 dark:text-blue-300" target="_blank">View</a>*/}
-            {/*        <div className="flex gap-2">*/}
-            {/*            {item.tags.map((tag, index) => (*/}
-            {/*            <span key={index} className="bg-blue-500 dark:bg-blue-300 text-white dark:text-black px-2 py-1 rounded-md text-sm">{tag}</span>*/}
-            {/*            ))}*/}
-            {/*        </div>*/}
-            {/*        </div>*/}
-            {/*    </div>*/}
-            {/*    ))}*/}
-            {/*</div>*/}
         </>
     )
 }
