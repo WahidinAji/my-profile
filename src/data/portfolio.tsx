@@ -28,12 +28,12 @@ export const portfolio = [
         tags: ["React", "Tailwind CSS"],
     },
     {
-        title: "Golang Blog",
-        description: "This is a golang blog project that I made using React and Tailwind CSS. This project is a simple golang blog that I made to show my projects and skills.",
+        title: "AI Chatbot Platform",
+        description: "An intelligent AI chatbot platform with machine learning capabilities, natural language processing, and real-time conversation analytics for enhanced user engagement.",
         image: "https://res.cloudinary.com/dk5bvgq20/image/upload/v1633047686/portfolio/portfolio-1_v0g4jg.png",
         link: "https://wahidinaji.github.io/portfolio/",
         source: "",
-        tags: ["React", "Tailwind CSS"],
+        tags: ["AI/ML", "Python", "React", "NLP"],
     },
 ]
 
