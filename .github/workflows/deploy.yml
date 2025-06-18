@@ -32,12 +32,10 @@ jobs:
       - name: Build & Deploy Worker
         uses: cloudflare/wrangler-action@v3
         with:
-          wranglerVersion: "4.20.2"
-          workingDirectory: "./dist"
+          wranglerVersion: "3.78.2"
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           packageManager: "pnpm"
-          command: "npx wrangler deploy"
 
 
           
