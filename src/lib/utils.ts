@@ -74,7 +74,7 @@ export const optimizeImageUrl = (url: string, width?: number, height?: number, q
 }
 
 // Debounce utility
-export function debounce<T extends (...args: any[]) => any>(
+export function debounce<T extends (...args: never[]) => unknown>(
   func: T,
   wait: number
 ): (...args: Parameters<T>) => void {
