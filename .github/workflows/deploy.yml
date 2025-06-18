@@ -3,6 +3,11 @@ on:
   push:
     branches:
       - release/**
+    tags:
+      - 'v*'
+  release:
+    types: [published, released]
+  workflow_dispatch:
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -10,6 +15,13 @@ jobs:
     needs: linter
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Get Release Info
+        if: github.event_name == 'release'
+        run: |
+          echo "Release tag: ${{ github.event.release.tag_name }}"
+          echo "Release name: ${{ github.event.release.name }}"
       - name: Build & Deploy Worker
         uses: cloudflare/wrangler-action@v3
         with:
@@ -20,6 +32,8 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Set up pnpm
         uses: pnpm/action-setup@v4
         with:
