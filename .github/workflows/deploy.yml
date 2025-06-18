@@ -2,12 +2,7 @@ name: Deploy Worker
 on:
   push:
     branches:
-      - release/**
-    tags:
-      - 'v*'
-  release:
-    types: [published, released]
-  workflow_dispatch:
+      - main
 jobs:
   deploy:
     runs-on: ubuntu-latest
