@@ -12,34 +12,11 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     timeout-minutes: 60
+    needs: test
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-
-      - name: Set up pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 10
-          run_install: false
-                    
-      - name: Install Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "22"
-          cache: "pnpm"
-      
-      - name: Install Dependencies
-        run: pnpm install
-      - name: Run Linter
-        run: pnpm run lint
-      - name: Build Project
-        run: pnpm run build
-      
+      - uses: actions/checkout@v4
       - name: Build & Deploy Worker
         uses: cloudflare/wrangler-action@v3
         with:
-          workingDirectory: "./dist"
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          packageManager: "pnpm"
-          command: "npx wrangler deploy"
