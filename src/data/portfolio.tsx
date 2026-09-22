@@ -13,6 +13,16 @@ export interface Project {
 
 export const projects: Project[] = [
   {
+    id: 'tinylink',
+    title: 'TinyLink',
+    description: 'A minimal URL shortener that turns long links into short, shareable ones.',
+    image: '/images/tinylink/homepage.png',
+    link: 'https://tinylink.wahidin-aji.my.id/',
+    tags: ['URL Shortener'],
+    status: 'completed',
+    featured: true,
+  },
+  {
     id: 'family-pool',
     title: 'Family Pool',
     description: 'A self-hosted app for managing shared recurring costs and rotating savings pots in invite-only rooms, with tRPC APIs, SQLite persistence, and receipt OCR support.',

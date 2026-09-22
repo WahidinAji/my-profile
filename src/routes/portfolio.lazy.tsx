@@ -16,6 +16,10 @@ interface OngoingProjectDocumentation {
 
 // Constants
 const PROJECT_DOCUMENTATION: OngoingProjectDocumentation = {
+  tinylink: [
+    { id: 1, title: 'Homepage', url: '/images/tinylink/homepage.png', description: 'Paste a long URL and shorten it' },
+    { id: 2, title: 'Mobile View', url: '/images/tinylink/mobile.png', description: 'Responsive layout on mobile' },
+  ],
   'family-pool': [
     { id: 1, title: 'Rooms Overview', url: '/images/family-pool/rooms-list.png', description: 'Invite-only rooms for shared pools' },
     { id: 2, title: 'Cost Split Pool', url: '/images/family-pool/pool-cost-split.png', description: 'Recurring shared cost tracking' },
