@@ -28,7 +28,7 @@ export const projects: Project[] = [
     title: 'Family Pool',
     description: 'A self-hosted app for managing shared recurring costs and rotating savings pots in invite-only rooms, with tRPC APIs, SQLite persistence, and receipt OCR support.',
     image: '/images/family-pool/rooms-list.png',
-    link: 'https://github.com/WahidinAji/family-pool',
+    link: 'https://family-pool.wahidin-aji.my.id/',
     sourceCode: 'https://github.com/WahidinAji/family-pool',
     tags: ['React', 'TypeScript', 'tRPC', 'Effect', 'SQLite', 'Go'],
     status: 'completed',
@@ -92,13 +92,3 @@ export const projects: Project[] = [
     hidden: true,
   },
 ] as const
-
-// Utility functions
-export const getFeaturedProjects = (): Project[] => 
-  projects.filter(project => project.featured)
-
-export const getProjectsByStatus = (status: Project['status']): Project[] =>
-  projects.filter(project => project.status === status)
-
-export const getProjectById = (id: string): Project | undefined =>
-  projects.find(project => project.id === id)

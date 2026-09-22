@@ -1,124 +1,29 @@
 import { createLazyFileRoute } from '@tanstack/react-router'
-import { useState, useCallback, useMemo } from 'react'
+import { useState } from 'react'
+import { ChevronDown, ChevronUp, FileText, Activity, Waves, Mountain, Bike, Dumbbell } from 'lucide-react'
 import cvPdf from '../assets/cv.pdf'
-
-// Types
-interface DocumentationImage {
-  id: number
-  title: string
-  url: string
-  description: string
-}
-
-interface SportsDocumentation {
-  [key: string]: DocumentationImage[]
-}
-
-interface SportCard {
-  key: string
-  title: string
-  description: string
-  icon: React.ReactNode
-  gradient: string
-}
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
 
 // Constants
-const SPORTS_DOCUMENTATION: SportsDocumentation = {
-  'mini-soccer': [
-    { id: 1, title: 'Team Match at Local Field', url: '/images/1725281319887.jpg', description: 'Playing with the local team' },
-    { id: 2, title: 'Tournament Victory', url: '/images/1725281319887.jpg', description: 'Celebrating our championship win' },
-    { id: 3, title: 'Training Session', url: '/images/1725281319887.jpg', description: 'Daily practice with teammates' },
-    { id: 4, title: 'Community League', url: '/images/1725281319887.jpg', description: 'Participating in community events' },
-    { id: 5, title: 'Team Celebration', url: '/images/1725281319887.jpg', description: 'Post-game team celebration' },
-  ],
-  swimming: [
-    { id: 1, title: 'Morning Lap Session', url: 'https://images.unsplash.com/photo-1530549387789-4c1017266635?w=400&h=400&fit=crop', description: 'Early morning training routine' },
-    { id: 2, title: 'Pool Competition', url: 'https://images.unsplash.com/photo-1571019613540-996a5fa2f536?w=400&h=400&fit=crop', description: 'Local swimming competition' },
-    { id: 3, title: 'Technique Practice', url: 'https://images.unsplash.com/photo-1566665797739-1674de7a421a?w=400&h=400&fit=crop', description: 'Working on stroke technique' },
-    { id: 4, title: 'Open Water Swimming', url: 'https://images.unsplash.com/photo-1583394838336-acd977736f90?w=400&h=400&fit=crop', description: 'Beach swimming adventure' },
-  ],
-  'other-activities': [
-    { id: 1, title: 'Hiking Adventure', url: 'https://images.unsplash.com/photo-1551632811-561732d1e306?w=400&h=400&fit=crop', description: 'Weekend mountain hiking' },
-    { id: 2, title: 'Cycling Tour', url: 'https://images.unsplash.com/photo-1558618666-fbd9c6cd4d0a?w=400&h=400&fit=crop', description: 'City cycling exploration' },
-    { id: 3, title: 'Basketball Game', url: 'https://images.unsplash.com/photo-1546519638-68e109498ffc?w=400&h=400&fit=crop', description: 'Friendly basketball match' },
-    { id: 4, title: 'Volleyball Beach', url: 'https://images.unsplash.com/photo-1612872087720-bb876e2e67d1?w=400&h=400&fit=crop', description: 'Beach volleyball with friends' },
-  ],
-} as const
-
-const SPORT_CARDS: SportCard[] = [
-  {
-    key: 'mini-soccer',
-    title: 'Mini Soccer',
-    description: 'Fast-paced fun with friends on smaller fields',
-    gradient: 'from-green-400 to-blue-500',
-    icon: (
-      <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
-        <circle cx="12" cy="12" r="11" />
-        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zM8 12c0-.55.45-1 1-1s1 .45 1 1-.45 1-1 1-1-.45-1-1zm8 0c0-.55.45-1 1-1s1 .45 1 1-.45 1-1 1-1-.45-1-1z" fill="none" stroke="currentColor" strokeWidth="2" />
-      </svg>
-    ),
-  },
-  {
-    key: 'swimming',
-    title: 'Swimming',
-    description: 'Great cardio workout and relaxation',
-    gradient: 'from-blue-400 to-cyan-500',
-    icon: (
-      <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 2C8.13 2 5 5.13 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.87-3.13-7-7-7z" />
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 14c.83 0 1.5-.67 1.5-1.5S8.83 11 8 11s-1.5.67-1.5 1.5S7.17 14 8 14z" />
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 14c.83 0 1.5-.67 1.5-1.5S16.83 11 16 11s-1.5.67-1.5 1.5S15.17 14 16 14z" />
-      </svg>
-    ),
-  },
-  {
-    key: 'other-activities',
-    title: 'Other Activities',
-    description: 'Always exploring new ways to stay active',
-    gradient: 'from-purple-400 to-pink-500',
-    icon: (
-      <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-      </svg>
-    ),
-  },
-] as const
+const ACTIVITIES: { label: string; icon: React.ReactNode }[] = [
+  { label: 'Mini Soccer', icon: <Activity className="size-3.5" /> },
+  { label: 'Swimming', icon: <Waves className="size-3.5" /> },
+  { label: 'Hiking', icon: <Mountain className="size-3.5" /> },
+  { label: 'Cycling', icon: <Bike className="size-3.5" /> },
+  { label: 'Basketball', icon: <Dumbbell className="size-3.5" /> },
+]
 
 // Utility Functions
-const createExternalLink = (href: string, text: string, className = 'font-bold underline text-blue-600 hover:text-blue-800 dark:hover:text-blue-400 transition-colors') => (
+const createExternalLink = (href: string, text: string) => (
   <a
     href={href}
     target="_blank"
     rel="noopener noreferrer"
-    className={className}
+    className="font-medium underline underline-offset-2 decoration-muted-foreground/50 hover:decoration-foreground transition-colors"
   >
     {text}
   </a>
-)
-
-// Icons
-const CloseIcon = () => (
-  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-  </svg>
-)
-
-const ChevronDownIcon = () => (
-  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-  </svg>
-)
-
-const ChevronUpIcon = () => (
-  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 15l7-7 7 7" />
-  </svg>
-)
-
-const DocumentIcon = () => (
-  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-  </svg>
 )
 
 // Components
@@ -126,28 +31,19 @@ const ProfessionalBio = () => (
   <section className="prose prose-lg dark:prose-invert max-w-none">
     <div className="space-y-6">
       <p>
-        Hello there, I'm a Software Engineer who loves to build things and learn new things.
-        I'm currently working as a Software Engineer at {createExternalLink('https://pandai.org', 'Pandai Education, Sdn Bhd')}.
+        I'm a Software Engineer currently working at {createExternalLink('https://pandai.org', 'Pandai Education, Sdn Bhd')}.
+        I picked up programming in university, starting with {createExternalLink('https://en.wikipedia.org/wiki/C_(programming_language)', 'C')}, {createExternalLink('https://en.wikipedia.org/wiki/C%2B%2B', 'C++')}, {createExternalLink('https://learn.microsoft.com/en-us/dotnet/csharp/', 'C#')}, and {createExternalLink('https://en.wikipedia.org/wiki/SQL', 'SQL')}.
+        My first job ran on {createExternalLink('https://laravel.com/', 'Laravel')} and {createExternalLink('https://www.php.net/', 'PHP')}, and I've been building things professionally ever since.
       </p>
 
       <p>
-        I started programming when I was in University, and I've been programming ever since.
-        The first programming language I learned was {createExternalLink('https://en.wikipedia.org/wiki/C_(programming_language)', 'C')}.
-        I've been programming in {createExternalLink('https://en.wikipedia.org/wiki/C_(programming_language)', 'C')}, {createExternalLink('https://en.wikipedia.org/wiki/C%2B%2B', 'C++')}, {createExternalLink('https://learn.microsoft.com/en-us/dotnet/csharp/', 'C#')}, and {createExternalLink('https://en.wikipedia.org/wiki/SQL', 'SQL')} in college.
-        When I got my first job, My company was using {createExternalLink('https://laravel.com/', 'Laravel')} and {createExternalLink('https://www.php.net/', 'PHP')}.
-        That's how I got into programming and I've been programming ever since.
+        A few years in, I stopped thinking of any one language as "my language" — these days I reach for
+        whatever the team and the problem call for, most often {createExternalLink('https://www.typescriptlang.org/', 'TypeScript')}, {createExternalLink('https://www.python.org/', 'Python')}, and {createExternalLink('https://go.dev/', 'Go')}.
+        Lately I've been spending a lot of that time contributing to and building open-source projects.
       </p>
 
       <p>
-        With 3 years of experience, I realized that programming languages are not the only thing that matters. The other important thing is what you do with your programming skills.
-        Otherwise, programming languages are just a tool to help you do your job. Choosing the right programming language is not the same as choosing the right job.
-        So, with that in mind, I can code in any language that I or my team wants to use. I've also been working with {createExternalLink('https://www.typescriptlang.org/', 'TypeScript')}, {createExternalLink('https://en.wikipedia.org/wiki/JavaScript', 'JavaScript')}, {createExternalLink('https://www.python.org/', 'Python')}, and {createExternalLink('https://go.dev/', 'Go')}.
-        Lately, I'm falling in love with Open-Source projects and I'm always increasing my knowledge and skills in the field of Open-Source.
-      </p>
-
-      <p>
-        Beyond coding, I also love staying active through sports! I particularly enjoy <span className='font-bold text-blue-600'>mini soccer</span>, <span className='font-bold text-blue-600'>swimming</span>, and other recreational activities.
-        Sports help me maintain a healthy work-life balance and keep my mind sharp for problem-solving.
+        Outside of code, I stay active with sports — it's a good counterbalance to sitting in front of a screen all day.
       </p>
     </div>
   </section>
@@ -156,243 +52,53 @@ const ProfessionalBio = () => (
 const CVSection = () => {
   const [isExpanded, setIsExpanded] = useState(false)
 
-  const toggleCV = useCallback(() => {
-    setIsExpanded(prev => !prev)
-  }, [])
-
   return (
-    <section className="mt-12">
-      <div className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-gray-900 rounded-lg shadow-lg border border-blue-200 dark:border-gray-700 overflow-hidden">
-        <button
-          onClick={toggleCV}
-          className="w-full px-6 py-4 flex items-center justify-between hover:bg-blue-100/50 dark:hover:bg-gray-700/50 transition-colors duration-200"
-          aria-expanded={isExpanded}
-          aria-controls="cv-iframe-container"
-        >
-          <div className="flex items-center gap-3">
-            <div className="p-2 bg-blue-500 dark:bg-blue-600 rounded-lg text-white">
-              <DocumentIcon />
-            </div>
-            <div className="text-left">
-              <h2 className="text-xl font-bold text-gray-900 dark:text-white">
-                View My CV
-              </h2>
-              <p className="text-sm text-gray-600 dark:text-gray-400">
-                Click to {isExpanded ? 'hide' : 'view'} my curriculum vitae
-              </p>
-            </div>
+    <Card className="mt-12">
+      <button
+        onClick={() => setIsExpanded((prev) => !prev)}
+        className="flex w-full items-center justify-between p-6 text-left transition-colors hover:bg-accent/50"
+        aria-expanded={isExpanded}
+        aria-controls="cv-iframe-container"
+      >
+        <div className="flex items-center gap-3">
+          <div className="rounded-lg bg-primary p-2 text-primary-foreground">
+            <FileText className="size-5" />
           </div>
-          <div className="text-gray-600 dark:text-gray-400 transition-transform duration-300" style={{ transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)' }}>
-            {isExpanded ? <ChevronUpIcon /> : <ChevronDownIcon />}
-          </div>
-        </button>
-
-        <div
-          id="cv-iframe-container"
-          className="transition-all duration-500 ease-in-out overflow-hidden"
-          style={{
-            maxHeight: isExpanded ? '800px' : '0px',
-            opacity: isExpanded ? 1 : 0,
-          }}
-        >
-          <div className="p-6 pt-0">
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-inner overflow-hidden border border-gray-200 dark:border-gray-700">
-              <iframe
-                src={cvPdf}
-                title="Curriculum Vitae"
-                className="w-full h-[700px]"
-                style={{
-                  border: 'none',
-                }}
-                loading="lazy"
-              />
-              {/* <div className="px-4 py-3 bg-gray-50 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700">
-                <p className="text-xs text-gray-600 dark:text-gray-400 text-center">
-                  💡 If the PDF doesn't load, please ensure <code className="px-1 py-0.5 bg-gray-200 dark:bg-gray-700 rounded">cv.pdf</code> is placed in the <code className="px-1 py-0.5 bg-gray-200 dark:bg-gray-700 rounded">public</code> folder
-                </p>
-              </div> */}
-            </div>
+          <div>
+            <CardTitle className="text-lg">View My CV</CardTitle>
+            <CardDescription>Click to {isExpanded ? 'hide' : 'view'} my curriculum vitae</CardDescription>
           </div>
         </div>
-      </div>
-    </section>
-  )
-}
+        {isExpanded ? <ChevronUp className="size-5 text-muted-foreground" /> : <ChevronDown className="size-5 text-muted-foreground" />}
+      </button>
 
-interface SportCardProps {
-  sport: SportCard
-  onClick: () => void
-}
-
-const SportCard = ({ sport, onClick }: SportCardProps) => (
-  <article
-    onClick={onClick}
-    className={`group relative overflow-hidden rounded-lg bg-gradient-to-br ${sport.gradient} p-6 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 cursor-pointer`}
-    role="button"
-    tabIndex={0}
-    onKeyDown={(e) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault()
-        onClick()
-      }
-    }}
-    aria-label={`View documentation for ${sport.title}`}
-  >
-    <div className="flex items-center justify-center mb-4">
-      <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center">
-        {sport.icon}
-      </div>
-    </div>
-    <h3 className="text-lg font-semibold text-center mb-2">{sport.title}</h3>
-    <p className="text-sm text-center opacity-90 mb-2">{sport.description}</p>
-    <p className="text-xs text-center opacity-75">Click to see documentation</p>
-  </article>
-)
-
-interface DocumentationImageProps {
-  image: DocumentationImage
-}
-
-const DocumentationImage = ({ image }: DocumentationImageProps) => {
-  const handleImageError = useCallback((e: React.SyntheticEvent<HTMLImageElement>) => {
-    const target = e.target as HTMLImageElement
-    const parent = target.parentElement
-
-    if (parent && !parent.querySelector('.fallback-icon')) {
-      target.style.display = 'none'
-
-      const fallback = document.createElement('div')
-      fallback.className = 'fallback-icon w-full h-full flex items-center justify-center text-gray-500 dark:text-gray-400'
-      fallback.innerHTML = `
-        <div class="text-center">
-          <svg class="w-12 h-12 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-          </svg>
-          <p class="text-xs">Image not found</p>
-        </div>
-      `
-      parent.appendChild(fallback)
-    }
-  }, [])
-
-  return (
-    <article className="group relative">
-      <div className="aspect-square bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-600 dark:to-gray-700 rounded-lg overflow-hidden">
-        <img
-          src={image.url}
-          alt={image.title}
-          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
-          onError={handleImageError}
-          loading="lazy"
-        />
-        <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-60 transition-all duration-300 flex items-end">
-          <div className="p-3 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            <h4 className="font-semibold text-sm">{image.title}</h4>
-            <p className="text-xs">{image.description}</p>
+      {isExpanded && (
+        <CardContent id="cv-iframe-container" className="pt-0">
+          <div className="overflow-hidden rounded-lg border">
+            <iframe src={cvPdf} title="Curriculum Vitae" className="h-[700px] w-full border-0" loading="lazy" />
           </div>
-        </div>
-      </div>
-    </article>
-  )
-}
-
-interface SportsDocumentationModalProps {
-  selectedSport: string
-  onClose: () => void
-}
-
-const SportsDocumentationModal = ({ selectedSport, onClose }: SportsDocumentationModalProps) => {
-  const selectedSportData = useMemo(
-    () => SPORT_CARDS.find(sport => sport.key === selectedSport),
-    [selectedSport]
-  )
-
-  const documentationImages = SPORTS_DOCUMENTATION[selectedSport] || []
-
-  if (!selectedSportData) return null
-
-  return (
-    <section className="mt-8 p-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700">
-      <header className="flex justify-between items-center mb-4">
-        <h3 className="text-xl font-bold">
-          {selectedSportData.title} Documentation
-        </h3>
-        <button
-          onClick={onClose}
-          className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors"
-          aria-label="Close documentation"
-        >
-          <CloseIcon />
-        </button>
-      </header>
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {documentationImages.map((image) => (
-          <DocumentationImage key={image.id} image={image} />
-        ))}
-      </div>
-
-      <footer className="mt-4 text-center">
-        <p className="text-sm text-gray-600 dark:text-gray-400">
-          📸 Documentation images showcase my journey in {selectedSportData.title.toLowerCase()}
-        </p>
-      </footer>
-    </section>
-  )
-}
-
-const SportsSection = () => {
-  const [selectedSport, setSelectedSport] = useState<string | null>(null)
-
-  const handleSportClick = useCallback((sportKey: string) => {
-    setSelectedSport(current => current === sportKey ? null : sportKey)
-  }, [])
-
-  const closeDocumentation = useCallback(() => {
-    setSelectedSport(null)
-  }, [])
-
-  return (
-    <section className="mt-12">
-      <header className="text-center mb-8">
-        <h2 className="text-2xl font-bold mb-4">My Sports & Activities</h2>
-      </header>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-        {SPORT_CARDS.map((sport) => (
-          <SportCard
-            key={sport.key}
-            sport={sport}
-            onClick={() => handleSportClick(sport.key)}
-          />
-        ))}
-      </div>
-
-      {selectedSport && (
-        <SportsDocumentationModal
-          selectedSport={selectedSport}
-          onClose={closeDocumentation}
-        />
+        </CardContent>
       )}
-
-      <div className="mt-8 p-4 bg-gradient-to-r from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-700 rounded-lg">
-        <p className="text-center text-sm italic">
-          💡 <strong>Fun fact:</strong> Playing sports helps me think more creatively when coding.
-          The strategic thinking in mini soccer often translates to better problem-solving in development!
-        </p>
-      </div>
-    </section>
+    </Card>
   )
 }
 
-const Signature = () => (
-  <footer className="mt-12 text-sm">
-    <p>
-      Sincerely,
-      <br />
-      <strong>Wahidin Aji</strong>
-    </p>
-  </footer>
+const SportsSection = () => (
+  <section className="mt-12">
+    <CardHeader className="px-0">
+      <CardTitle className="text-xl">Sports & Activities</CardTitle>
+      <CardDescription>Things I do to stay off the screen for a while</CardDescription>
+    </CardHeader>
+
+    <div className="flex flex-wrap gap-2">
+      {ACTIVITIES.map((activity) => (
+        <Badge key={activity.label} variant="secondary" className="gap-1.5 py-1.5 px-3 text-sm font-normal">
+          {activity.icon}
+          {activity.label}
+        </Badge>
+      ))}
+    </div>
+  </section>
 )
 
 // Main Component
@@ -401,7 +107,6 @@ const AboutPage = () => (
     <ProfessionalBio />
     <CVSection />
     <SportsSection />
-    <Signature />
   </div>
 )
 
