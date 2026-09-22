@@ -16,6 +16,12 @@ interface OngoingProjectDocumentation {
 
 // Constants
 const PROJECT_DOCUMENTATION: OngoingProjectDocumentation = {
+  'family-pool': [
+    { id: 1, title: 'Rooms Overview', url: '/images/family-pool/rooms-list.png', description: 'Invite-only rooms for shared pools' },
+    { id: 2, title: 'Cost Split Pool', url: '/images/family-pool/pool-cost-split.png', description: 'Recurring shared cost tracking' },
+    { id: 3, title: 'Arisan Pool', url: '/images/family-pool/pool-arisan.png', description: 'Rotating savings pot management' },
+    { id: 4, title: 'Mobile Pool View', url: '/images/family-pool/mobile-pool.png', description: 'Responsive pool details screen' },
+  ],
   marketplace: [
     { id: 1, title: 'Homepage Design', url: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=400&h=400&fit=crop', description: 'Landing page with product showcase' },
     { id: 2, title: 'Product Catalog', url: 'https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=400&h=400&fit=crop', description: 'Product listing and filtering system' },
@@ -226,7 +232,7 @@ const Portfolio = () => {
           </p>
         </header>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           {portfolio.map((project) => {
             const projectSlug = generateProjectSlug(project.title)
             return (

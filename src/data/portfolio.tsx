@@ -13,6 +13,17 @@ export interface Project {
 
 export const projects: Project[] = [
   {
+    id: 'family-pool',
+    title: 'Family Pool',
+    description: 'A self-hosted app for managing shared recurring costs and rotating savings pots in invite-only rooms, with tRPC APIs, SQLite persistence, and receipt OCR support.',
+    image: '/images/family-pool/rooms-list.png',
+    link: 'https://github.com/WahidinAji/family-pool',
+    sourceCode: 'https://github.com/WahidinAji/family-pool',
+    tags: ['React', 'TypeScript', 'tRPC', 'Effect', 'SQLite', 'Go'],
+    status: 'completed',
+    featured: true,
+  },
+  {
     id: 'marketplace',
     title: 'E-Commerce Marketplace',
     description: 'A full-stack marketplace application featuring user authentication, product management, shopping cart functionality, and secure payment processing. Built with modern technologies for optimal performance.',
