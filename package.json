@@ -26,7 +26,8 @@
     "react-query": "^3.39.3",
     "redaxios": "^0.5.1",
     "tailwind-merge": "^2.6.1",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "yet-another-react-lightbox": "^3.32.2"
   },
   "devDependencies": {
     "@tanstack/router-devtools": "^1.167.2",

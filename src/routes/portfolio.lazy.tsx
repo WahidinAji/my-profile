@@ -1,6 +1,13 @@
 import { createLazyFileRoute } from '@tanstack/react-router'
-import { useState, useMemo, useCallback, useEffect } from 'react'
+import { useState, useMemo, useCallback } from 'react'
 import { portfolio } from '@/data/portfolio'
+import Lightbox from 'yet-another-react-lightbox'
+import Zoom from 'yet-another-react-lightbox/plugins/zoom'
+import Captions from 'yet-another-react-lightbox/plugins/captions'
+import Counter from 'yet-another-react-lightbox/plugins/counter'
+import 'yet-another-react-lightbox/styles.css'
+import 'yet-another-react-lightbox/plugins/captions.css'
+import 'yet-another-react-lightbox/plugins/counter.css'
 
 // Types
 interface DocumentationImage {
@@ -69,30 +76,6 @@ const CodeIcon = () => (
 const CloseIcon = () => (
   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"/>
-  </svg>
-)
-
-const ZoomInIcon = () => (
-  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-4.35-4.35M11 8v6m-3-3h6m5 0a8 8 0 11-16 0 8 8 0 0116 0z"/>
-  </svg>
-)
-
-const ZoomOutIcon = () => (
-  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-4.35-4.35M8 11h6m5 0a8 8 0 11-16 0 8 8 0 0116 0z"/>
-  </svg>
-)
-
-const ChevronLeftIcon = () => (
-  <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"/>
-  </svg>
-)
-
-const ChevronRightIcon = () => (
-  <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"/>
   </svg>
 )
 
@@ -200,142 +183,6 @@ const DocumentationImage = ({ image, onClick }: DocumentationImageProps) => {
   )
 }
 
-const MIN_ZOOM = 1
-const MAX_ZOOM = 3
-const ZOOM_STEP = 0.5
-
-interface ImageLightboxProps {
-  images: DocumentationImage[]
-  index: number
-  onClose: () => void
-  onNavigate: (index: number) => void
-}
-
-const ImageLightbox = ({ images, index, onClose, onNavigate }: ImageLightboxProps) => {
-  const image = images[index]
-  const hasMultiple = images.length > 1
-  const [zoom, setZoom] = useState(1)
-
-  const goPrev = useCallback(() => {
-    onNavigate((index - 1 + images.length) % images.length)
-  }, [index, images.length, onNavigate])
-
-  const goNext = useCallback(() => {
-    onNavigate((index + 1) % images.length)
-  }, [index, images.length, onNavigate])
-
-  const zoomIn = useCallback(() => {
-    setZoom(z => Math.min(MAX_ZOOM, +(z + ZOOM_STEP).toFixed(2)))
-  }, [])
-
-  const zoomOut = useCallback(() => {
-    setZoom(z => Math.max(MIN_ZOOM, +(z - ZOOM_STEP).toFixed(2)))
-  }, [])
-
-  useEffect(() => {
-    setZoom(1)
-  }, [index])
-
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose()
-      if (e.key === 'ArrowLeft' && hasMultiple) goPrev()
-      if (e.key === 'ArrowRight' && hasMultiple) goNext()
-      if (e.key === '+' || e.key === '=') zoomIn()
-      if (e.key === '-') zoomOut()
-    }
-    document.addEventListener('keydown', handleKeyDown)
-    document.body.style.overflow = 'hidden'
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown)
-      document.body.style.overflow = ''
-    }
-  }, [onClose, goPrev, goNext, zoomIn, zoomOut, hasMultiple])
-
-  if (!image) return null
-
-  return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4"
-      onClick={onClose}
-      role="dialog"
-      aria-modal="true"
-      aria-label={image.title}
-    >
-      <button
-        onClick={onClose}
-        className="absolute top-4 right-4 text-white/80 hover:text-white transition-colors"
-        aria-label="Close preview"
-      >
-        <CloseIcon />
-      </button>
-
-      {hasMultiple && (
-        <>
-          <button
-            onClick={(e) => { e.stopPropagation(); goPrev() }}
-            className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 text-white/80 hover:text-white transition-colors bg-black/30 hover:bg-black/50 rounded-full p-2"
-            aria-label="Previous image"
-          >
-            <ChevronLeftIcon />
-          </button>
-          <button
-            onClick={(e) => { e.stopPropagation(); goNext() }}
-            className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 text-white/80 hover:text-white transition-colors bg-black/30 hover:bg-black/50 rounded-full p-2"
-            aria-label="Next image"
-          >
-            <ChevronRightIcon />
-          </button>
-        </>
-      )}
-
-      <figure
-        className="max-w-4xl max-h-full flex flex-col items-center"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="max-w-[90vw] max-h-[70vh] overflow-auto rounded-lg">
-          <img
-            src={image.url}
-            alt={image.title}
-            style={{ transform: `scale(${zoom})`, transformOrigin: 'center' }}
-            className="max-w-full max-h-[70vh] object-contain rounded-lg shadow-2xl transition-transform duration-200"
-          />
-        </div>
-
-        <div className="mt-3 flex items-center gap-3 bg-black/40 rounded-full px-3 py-1.5">
-          <button
-            onClick={zoomOut}
-            disabled={zoom <= MIN_ZOOM}
-            className="text-white/80 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
-            aria-label="Zoom out"
-          >
-            <ZoomOutIcon />
-          </button>
-          <span className="text-white/80 text-xs w-10 text-center tabular-nums">
-            {Math.round(zoom * 100)}%
-          </span>
-          <button
-            onClick={zoomIn}
-            disabled={zoom >= MAX_ZOOM}
-            className="text-white/80 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
-            aria-label="Zoom in"
-          >
-            <ZoomInIcon />
-          </button>
-        </div>
-
-        <figcaption className="mt-3 text-center text-white">
-          <h4 className="font-semibold">{image.title}</h4>
-          <p className="text-sm text-white/70">{image.description}</p>
-          {hasMultiple && (
-            <p className="text-xs text-white/50 mt-1">{index + 1} / {images.length}</p>
-          )}
-        </figcaption>
-      </figure>
-    </div>
-  )
-}
-
 interface DocumentationModalProps {
   selectedProject: string
   onClose: () => void
@@ -383,14 +230,21 @@ const DocumentationModal = ({ selectedProject, onClose }: DocumentationModalProp
         </p>
       </footer>
 
-      {lightboxIndex !== null && (
-        <ImageLightbox
-          images={documentationImages}
-          index={lightboxIndex}
-          onClose={() => setLightboxIndex(null)}
-          onNavigate={setLightboxIndex}
-        />
-      )}
+      <Lightbox
+        open={lightboxIndex !== null}
+        close={() => setLightboxIndex(null)}
+        index={lightboxIndex ?? 0}
+        slides={documentationImages.map((image) => ({
+          src: image.url,
+          alt: image.title,
+          title: image.title,
+          description: image.description,
+        }))}
+        plugins={[Zoom, Captions, Counter]}
+        on={{ view: ({ index }) => setLightboxIndex(index) }}
+        counter={{ container: { style: { top: 'unset', bottom: 0 } } }}
+        zoom={{ maxZoomPixelRatio: 3, doubleTapDelay: 300 }}
+      />
     </section>
   )
 }
