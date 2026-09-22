@@ -1,6 +1,6 @@
 import { createLazyFileRoute } from '@tanstack/react-router'
 import { useState, useMemo, useCallback } from 'react'
-import { portfolio } from '@/data/portfolio'
+import { projects, type Project } from '@/data/portfolio'
 import Lightbox from 'yet-another-react-lightbox'
 import Zoom from 'yet-another-react-lightbox/plugins/zoom'
 import Captions from 'yet-another-react-lightbox/plugins/captions'
@@ -27,11 +27,25 @@ const PROJECT_DOCUMENTATION: OngoingProjectDocumentation = {
     { id: 1, title: 'Homepage', url: '/images/tinylink/homepage.png', description: 'Paste a long URL and shorten it' },
     { id: 2, title: 'Mobile View', url: '/images/tinylink/mobile.png', description: 'Responsive layout on mobile' },
   ],
+  'my-thoughts': [
+    { id: 1, title: 'Homepage', url: '/images/my-thoughts/homepage.png', description: 'Bilingual post list with search and year filtering' },
+    { id: 2, title: 'Mobile View', url: '/images/my-thoughts/mobile.png', description: 'Responsive layout on mobile' },
+  ],
   'family-pool': [
-    { id: 1, title: 'Rooms Overview', url: '/images/family-pool/rooms-list.png', description: 'Invite-only rooms for shared pools' },
-    { id: 2, title: 'Cost Split Pool', url: '/images/family-pool/pool-cost-split.png', description: 'Recurring shared cost tracking' },
-    { id: 3, title: 'Arisan Pool', url: '/images/family-pool/pool-arisan.png', description: 'Rotating savings pot management' },
-    { id: 4, title: 'Mobile Pool View', url: '/images/family-pool/mobile-pool.png', description: 'Responsive pool details screen' },
+    { id: 1, title: 'Login', url: '/images/family-pool/login.png', description: 'Passwordless, magic-link-only auth' },
+    { id: 2, title: 'Rooms Dashboard', url: '/images/family-pool/rooms-list.png', description: "Rooms you're in, what you owe, and pending approvals" },
+    { id: 3, title: 'Room — Pools Tab', url: '/images/family-pool/room-pools-tab.png', description: 'The pools a family shares inside a room' },
+    { id: 4, title: 'Create Pool Dialog', url: '/images/family-pool/create-pool-dialog.png', description: 'Choose between a cost-split pool or a rotating arisan pot' },
+    { id: 5, title: 'Room — Members Tab', url: '/images/family-pool/room-members-tab.png', description: 'Manage who is in the room' },
+    { id: 6, title: 'Room — Settings Tab', url: '/images/family-pool/room-settings-tab.png', description: "The room's reusable invite link" },
+    { id: 7, title: 'Cost-Split Pool', url: '/images/family-pool/pool-cost-split.png', description: 'Balance and paid-through period computed live from an append-only ledger' },
+    { id: 8, title: 'Arisan Pool', url: '/images/family-pool/pool-arisan.png', description: 'Rotating savings pot — one random winner per round' },
+    { id: 9, title: 'Approval Inbox', url: '/images/family-pool/inbox.png', description: "Every room you own's pending receipt approvals in one place" },
+    { id: 10, title: 'Login — Modern Theme', url: '/images/family-pool/theme-login-modern.png', description: 'The default modern theme' },
+    { id: 11, title: 'Login — Retro Theme', url: '/images/family-pool/theme-login-retro.png', description: 'A full retro theme, pure CSS on shared component slots' },
+    { id: 12, title: 'Pool — Modern Theme', url: '/images/family-pool/theme-pool-modern.png', description: 'Pool page in the modern theme' },
+    { id: 13, title: 'Pool — Retro Theme', url: '/images/family-pool/theme-pool-retro.png', description: 'Pool page in the retro theme' },
+    { id: 14, title: 'Mobile View', url: '/images/family-pool/mobile-pool.png', description: 'Built mobile-first for uploading receipt photos' },
   ],
   marketplace: [
     { id: 1, title: 'Homepage Design', url: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=400&h=400&fit=crop', description: 'Landing page with product showcase' },
@@ -60,8 +74,17 @@ const PROJECT_DOCUMENTATION: OngoingProjectDocumentation = {
 } as const
 
 // Utils
-const generateProjectSlug = (title: string): string => 
-  title.toLowerCase().replace(/\s+/g, '-')
+const STATUS_LABELS: Record<Project['status'], string> = {
+  completed: 'Completed',
+  'in-progress': 'In Progress',
+  planned: 'Planned',
+}
+
+const STATUS_STYLES: Record<Project['status'], string> = {
+  completed: 'bg-emerald-500',
+  'in-progress': 'bg-amber-500',
+  planned: 'bg-gray-500',
+}
 
 const truncateText = (text: string, maxLength: number): string =>
   text.length > maxLength ? `${text.substring(0, maxLength)}...` : text
@@ -87,7 +110,7 @@ const ImagePlaceholderIcon = () => (
 
 // Components
 interface ProjectCardProps {
-  project: typeof portfolio[0]
+  project: Project
   onClick: () => void
 }
 
@@ -119,8 +142,8 @@ const ProjectCard = ({ project, onClick }: ProjectCardProps) => (
       <p className="text-xs opacity-75">Click to see documentation</p>
     </div>
     
-    <div className="absolute top-2 right-2 bg-green-500 text-white px-2 py-1 rounded-full text-xs">
-      In Progress
+    <div className={`absolute top-2 right-2 ${STATUS_STYLES[project.status]} text-white px-2 py-1 rounded-full text-xs`}>
+      {STATUS_LABELS[project.status]}
     </div>
   </article>
 )
@@ -190,7 +213,7 @@ interface DocumentationModalProps {
 
 const DocumentationModal = ({ selectedProject, onClose }: DocumentationModalProps) => {
   const selectedProjectData = useMemo(
-    () => portfolio.find(p => generateProjectSlug(p.title) === selectedProject),
+    () => projects.find(p => p.id === selectedProject),
     [selectedProject]
   )
 
@@ -271,23 +294,20 @@ const Portfolio = () => {
 
       <section className="mb-8">
         <header className="text-center mb-8">
-          <h2 className="text-2xl font-bold mb-4">Ongoing Projects</h2>
+          <h2 className="text-2xl font-bold mb-4">Projects</h2>
           <p className="text-gray-600 dark:text-gray-400">
             Click on any project to see development documentation and progress images
           </p>
         </header>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-          {portfolio.map((project) => {
-            const projectSlug = generateProjectSlug(project.title)
-            return (
-              <ProjectCard
-                key={project.title}
-                project={project}
-                onClick={() => handleProjectClick(projectSlug)}
-              />
-            )
-          })}
+          {projects.filter((project) => !project.hidden).map((project) => (
+            <ProjectCard
+              key={project.id}
+              project={project}
+              onClick={() => handleProjectClick(project.id)}
+            />
+          ))}
         </div>
 
         {selectedProject && (

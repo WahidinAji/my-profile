@@ -9,6 +9,7 @@ export interface Project {
   tags: string[]
   status: 'completed' | 'in-progress' | 'planned'
   featured?: boolean
+  hidden?: boolean
 }
 
 export const projects: Project[] = [
@@ -34,6 +35,16 @@ export const projects: Project[] = [
     featured: true,
   },
   {
+    id: 'my-thoughts',
+    title: 'My Thoughts',
+    description: 'A personal blog for notes and write-ups, in English and Indonesian, with search and year filtering.',
+    image: '/images/my-thoughts/homepage.png',
+    link: 'https://my-thoughts.wahidin-aji.my.id/',
+    tags: ['Blog'],
+    status: 'completed',
+    featured: true,
+  },
+  {
     id: 'marketplace',
     title: 'E-Commerce Marketplace',
     description: 'A full-stack marketplace application featuring user authentication, product management, shopping cart functionality, and secure payment processing. Built with modern technologies for optimal performance.',
@@ -54,6 +65,7 @@ export const projects: Project[] = [
     tags: ['React', 'Socket.io', 'Node.js', 'MongoDB', 'WebRTC'],
     status: 'in-progress',
     featured: true,
+    hidden: true,
   },
   {
     id: 'blog-platform',
@@ -65,6 +77,7 @@ export const projects: Project[] = [
     tags: ['React', 'Next.js', 'MDX', 'Prisma', 'PostgreSQL'],
     status: 'in-progress',
     featured: false,
+    hidden: true,
   },
   {
     id: 'ai-chatbot-platform',
@@ -76,18 +89,9 @@ export const projects: Project[] = [
     tags: ['Python', 'TensorFlow', 'React', 'FastAPI', 'OpenAI'],
     status: 'in-progress',
     featured: true,
+    hidden: true,
   },
 ] as const
-
-// Legacy export for backward compatibility
-export const portfolio = projects.map(project => ({
-  title: project.title,
-  description: project.description,
-  image: project.image,
-  link: project.link,
-  source: project.sourceCode || '',
-  tags: project.tags,
-}))
 
 // Utility functions
 export const getFeaturedProjects = (): Project[] => 
