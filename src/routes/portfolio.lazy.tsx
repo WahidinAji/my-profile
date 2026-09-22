@@ -1,5 +1,5 @@
 import { createLazyFileRoute } from '@tanstack/react-router'
-import { useState, useMemo, useCallback } from 'react'
+import { useState, useMemo, useCallback, useEffect } from 'react'
 import { portfolio } from '@/data/portfolio'
 
 // Types
@@ -120,16 +120,17 @@ const ProjectCard = ({ project, onClick }: ProjectCardProps) => (
 
 interface DocumentationImageProps {
   image: DocumentationImage
+  onClick: () => void
 }
 
-const DocumentationImage = ({ image }: DocumentationImageProps) => {
+const DocumentationImage = ({ image, onClick }: DocumentationImageProps) => {
   const handleImageError = useCallback((e: React.SyntheticEvent<HTMLImageElement>) => {
     const target = e.target as HTMLImageElement
     const parent = target.parentElement
-    
+
     if (parent && !parent.querySelector('.fallback-icon')) {
       target.style.display = 'none'
-      
+
       const fallback = document.createElement('div')
       fallback.className = 'fallback-icon w-full h-full flex items-center justify-center text-gray-500 dark:text-gray-400'
       fallback.innerHTML = `
@@ -143,10 +144,22 @@ const DocumentationImage = ({ image }: DocumentationImageProps) => {
   }, [])
 
   return (
-    <article className="group relative">
+    <article
+      className="group relative cursor-zoom-in"
+      onClick={onClick}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault()
+          onClick()
+        }
+      }}
+      aria-label={`Preview ${image.title}`}
+    >
       <div className="aspect-square bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-600 dark:to-gray-700 rounded-lg overflow-hidden">
-        <img 
-          src={image.url} 
+        <img
+          src={image.url}
           alt={image.title}
           className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
           onError={handleImageError}
@@ -163,6 +176,58 @@ const DocumentationImage = ({ image }: DocumentationImageProps) => {
   )
 }
 
+interface ImageLightboxProps {
+  image: DocumentationImage
+  onClose: () => void
+}
+
+const ImageLightbox = ({ image, onClose }: ImageLightboxProps) => {
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose()
+    }
+    document.addEventListener('keydown', handleKeyDown)
+    document.body.style.overflow = 'hidden'
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown)
+      document.body.style.overflow = ''
+    }
+  }, [onClose])
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4"
+      onClick={onClose}
+      role="dialog"
+      aria-modal="true"
+      aria-label={image.title}
+    >
+      <button
+        onClick={onClose}
+        className="absolute top-4 right-4 text-white/80 hover:text-white transition-colors"
+        aria-label="Close preview"
+      >
+        <CloseIcon />
+      </button>
+
+      <figure
+        className="max-w-4xl max-h-full flex flex-col items-center"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <img
+          src={image.url}
+          alt={image.title}
+          className="max-w-full max-h-[80vh] object-contain rounded-lg shadow-2xl"
+        />
+        <figcaption className="mt-3 text-center text-white">
+          <h4 className="font-semibold">{image.title}</h4>
+          <p className="text-sm text-white/70">{image.description}</p>
+        </figcaption>
+      </figure>
+    </div>
+  )
+}
+
 interface DocumentationModalProps {
   selectedProject: string
   onClose: () => void
@@ -173,8 +238,9 @@ const DocumentationModal = ({ selectedProject, onClose }: DocumentationModalProp
     () => portfolio.find(p => generateProjectSlug(p.title) === selectedProject),
     [selectedProject]
   )
-  
+
   const documentationImages = PROJECT_DOCUMENTATION[selectedProject] || []
+  const [lightboxImage, setLightboxImage] = useState<DocumentationImage | null>(null)
 
   if (!selectedProjectData) return null
 
@@ -184,7 +250,7 @@ const DocumentationModal = ({ selectedProject, onClose }: DocumentationModalProp
         <h3 className="text-xl font-bold">
           {selectedProjectData.title} - Development Documentation
         </h3>
-        <button 
+        <button
           onClick={onClose}
           className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors"
           aria-label="Close documentation"
@@ -192,18 +258,26 @@ const DocumentationModal = ({ selectedProject, onClose }: DocumentationModalProp
           <CloseIcon />
         </button>
       </header>
-      
+
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {documentationImages.map((image) => (
-          <DocumentationImage key={image.id} image={image} />
+          <DocumentationImage
+            key={image.id}
+            image={image}
+            onClick={() => setLightboxImage(image)}
+          />
         ))}
       </div>
-      
+
       <footer className="mt-4 text-center">
         <p className="text-sm text-gray-600 dark:text-gray-400">
           🚀 Development progress and implementation details for {selectedProjectData.title}
         </p>
       </footer>
+
+      {lightboxImage && (
+        <ImageLightbox image={lightboxImage} onClose={() => setLightboxImage(null)} />
+      )}
     </section>
   )
 }
