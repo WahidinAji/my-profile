@@ -1,7 +1,7 @@
 import { createLazyFileRoute } from '@tanstack/react-router'
 import { useState } from 'react'
 import { ExternalLink, Github, Images, Code2 } from 'lucide-react'
-import { projects, type Project } from '@/data/portfolio'
+import { projects, type Project } from '@/data/projects'
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -147,7 +147,7 @@ const ProjectCard = ({ project, onOpenGallery }: ProjectCardProps) => {
 }
 
 // Main Component
-const Portfolio = () => {
+const Projects = () => {
   const [galleryProjectId, setGalleryProjectId] = useState<string | null>(null)
   const [lightboxIndex, setLightboxIndex] = useState(0)
 
@@ -199,6 +199,6 @@ const Portfolio = () => {
   )
 }
 
-export const Route = createLazyFileRoute('/portfolio')({
-  component: Portfolio,
+export const Route = createLazyFileRoute('/projects')({
+  component: Projects,
 })

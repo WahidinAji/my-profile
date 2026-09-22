@@ -14,7 +14,7 @@ import { Route as rootRouteImport } from './routes/__root'
 
 const IndexLazyRouteImport = createFileRoute('/')()
 const AboutLazyRouteImport = createFileRoute('/about')()
-const PortfolioLazyRouteImport = createFileRoute('/portfolio')()
+const ProjectsLazyRouteImport = createFileRoute('/projects')()
 
 const IndexLazyRoute = IndexLazyRouteImport.update({
   id: '/',
@@ -26,40 +26,40 @@ const AboutLazyRoute = AboutLazyRouteImport.update({
   path: '/about',
   getParentRoute: () => rootRouteImport,
 } as any).lazy(() => import('./routes/about.lazy').then((d) => d.Route))
-const PortfolioLazyRoute = PortfolioLazyRouteImport.update({
-  id: '/portfolio',
-  path: '/portfolio',
+const ProjectsLazyRoute = ProjectsLazyRouteImport.update({
+  id: '/projects',
+  path: '/projects',
   getParentRoute: () => rootRouteImport,
-} as any).lazy(() => import('./routes/portfolio.lazy').then((d) => d.Route))
+} as any).lazy(() => import('./routes/projects.lazy').then((d) => d.Route))
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexLazyRoute
   '/about': typeof AboutLazyRoute
-  '/portfolio': typeof PortfolioLazyRoute
+  '/projects': typeof ProjectsLazyRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexLazyRoute
   '/about': typeof AboutLazyRoute
-  '/portfolio': typeof PortfolioLazyRoute
+  '/projects': typeof ProjectsLazyRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexLazyRoute
   '/about': typeof AboutLazyRoute
-  '/portfolio': typeof PortfolioLazyRoute
+  '/projects': typeof ProjectsLazyRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about' | '/portfolio'
+  fullPaths: '/' | '/about' | '/projects'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/portfolio'
-  id: '__root__' | '/' | '/about' | '/portfolio'
+  to: '/' | '/about' | '/projects'
+  id: '__root__' | '/' | '/about' | '/projects'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexLazyRoute: typeof IndexLazyRoute
   AboutLazyRoute: typeof AboutLazyRoute
-  PortfolioLazyRoute: typeof PortfolioLazyRoute
+  ProjectsLazyRoute: typeof ProjectsLazyRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -78,11 +78,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutLazyRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/portfolio': {
-      id: '/portfolio'
-      path: '/portfolio'
-      fullPath: '/portfolio'
-      preLoaderRoute: typeof PortfolioLazyRouteImport
+    '/projects': {
+      id: '/projects'
+      path: '/projects'
+      fullPath: '/projects'
+      preLoaderRoute: typeof ProjectsLazyRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -91,7 +91,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexLazyRoute: IndexLazyRoute,
   AboutLazyRoute: AboutLazyRoute,
-  PortfolioLazyRoute: PortfolioLazyRoute,
+  ProjectsLazyRoute: ProjectsLazyRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
