@@ -68,18 +68,18 @@ const HeroSection = () => (
       <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight animate-pulse">
         Hello, I'm{' '}
         <span className="bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
-          Wahidin
+          <strong className="text-red-500">Ranger Merah</strong>
         </span>
         !
       </h1>
       
-      <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl">
-      I'm <strong className="text-red-500">Ranger Merah</strong>
-      {/*
+      {/*<p className="text-xl md:text-2xl text-muted-foreground max-w-2xl">
+      *I'm <strong className="text-red-500">Ranger Merah</strong>
+      
         I'm a <strong>Software Engineer</strong> passionate about building innovative solutions
         and creating exceptional digital experiences.
-	*/}
-      </p>
+	
+      </p>*/}
     </div>
 
     <div className="flex flex-col sm:flex-row gap-4 items-center">
