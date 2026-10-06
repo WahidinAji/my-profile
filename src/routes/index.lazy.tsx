@@ -74,8 +74,11 @@ const HeroSection = () => (
       </h1>
       
       <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl">
+      I'm <strong className="text-red-500">Ranger Merah</strong>
+      {/*
         I'm a <strong>Software Engineer</strong> passionate about building innovative solutions
         and creating exceptional digital experiences.
+	*/}
       </p>
     </div>
 
